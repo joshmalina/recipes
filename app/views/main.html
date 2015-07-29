@@ -1,0 +1,74 @@
+<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alerts.splice($index, 1);" style="font-weight:bold">{{alert.msg}}</alert>
+
+<div class="jumbotron col-lg-8">
+  <span ng-if="!selected">Please select a recipe below</span>
+  <h4 ng-if="selected">Mmm, {{selected.name}}! <br><br><small>You'll need:</small></h4> 
+  <label>
+    <span ng-repeat="f in flatten(selected.ingredients)">
+      {{f}}{{$last ? ' ' : ', '}}
+    </span>
+  </label>
+  <br>
+  <button class="btn-link btn btn-xs" style="font-size:x-small" ng-click="clear()" ng-show="selectedRecipes.length > 0">Clear</button>
+</div>
+
+
+
+<div class="col-lg-4 pull-right">
+  <div class="well">
+    <div class="form-group">
+      <input type="text" class="form-control" ng-model="queriedRecipe" placeholder="Search">
+    </div>    
+  </div> 
+  <form class="well" no-validate>
+    <label>Add new recipe</label>
+    <div class="form-group">
+      <input type="text" class="form-control" ng-model="new_recipe.name" placeholder="Dish name">
+    </div>   
+    <div ng-repeat="(key, ingredient) in new_recipe.ingredients track by key">
+      <div class = "form-group">
+        <input type="text" class="form-control" ng-model="new_recipe.ingredients[key]" placeholder="Ingredient {{key + 1}}">         
+      </div>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-xs" ng-click="addIngredient()">Add ingredient</button>
+    </div>
+
+    <button class="btn btn btn-danger btn-sm" type="submit" ng-click="addRecipe(new_recipe)">Submit Recipe</button>
+  </form>
+
+  
+   <form class="well" no-validate name="editForm" ng-if="selected">
+    <label>Edit recipe: {{selected.name}}</label>
+    <div ng-repeat="(key, ingredient) in edit.ingredients track by key">
+      <div class = "form-group">
+        <input type="text" class="form-control" ng-model="edit.ingredients[key]" placeholder="Ingredient {{key + 1}}">         
+      </div>
+    </div>
+    <button class="btn btn btn-danger btn-sm" type="submit" ng-click="editRecipe()">Edit Recipe</button>
+  </form>
+</div>
+
+
+<div class="col-lg-8">
+  <h5>Showing {{message_recipes.length}} recipe(s)</h5>
+  <table class="table">
+    <thead>
+      <th>Name</th>
+      <th>Recipe</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="recipe in message_recipes | filter: queriedRecipe">
+        <td>{{recipe.name}}</td>
+        <td><span ng-repeat="f in flatten(recipe.ingredients)">
+      {{f}}{{$last ? ' ' : ', '}}
+    </span></td>
+        <td><button class="btn btn-xs btn-primary" ng-click="select(recipe)">Choose</button></td>
+        <td>
+          <button class="pull-right btn btn-xs btn-danger" ng-click="message_recipes.$remove($index)">X</button>
+        </td>
+      </tr>
+    </tbody>
+  </table> 
+</div>
+
