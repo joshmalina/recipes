@@ -18,5 +18,6 @@ angular.module('recipesApp', [
     'ngTouch',
     'firebase',
     'firebase.ref',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ngLodash'
   ]);

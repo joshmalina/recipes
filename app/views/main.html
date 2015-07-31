@@ -60,7 +60,8 @@
     <tbody>
       <tr ng-repeat="recipe in message_recipes | filter: queriedRecipe">
         <td>{{recipe.name}}</td>
-        <td><span ng-repeat="f in flatten(recipe.ingredients)">
+<!--         <td><pre>{{loFlatten(recipe.ingredients) | json}}</pre></td>
+ -->        <td><span ng-repeat="f in loFlatten(recipe.ingredients) track by $index">
       {{f}}{{$last ? ' ' : ', '}}
     </span></td>
         <td><button class="btn btn-xs btn-primary" ng-click="select(recipe)">Choose</button></td>

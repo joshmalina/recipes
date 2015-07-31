@@ -8,7 +8,7 @@
  * Controller of the recipesApp
  */
  angular.module('recipesApp')
- .controller('MainCtrl', ['$scope', 'Path', '$firebaseArray', '$q', function ($scope, Path, $firebaseArray, $q) {
+ .controller('MainCtrl', ['$scope', 'Path', '$firebaseArray', '$q', 'lodash', function ($scope, Path, $firebaseArray, $q, lodash) {
 
  	// reference to our data
  	var ref = new Firebase (Path);
@@ -47,19 +47,30 @@
 
  			var length = recipes.length;
 
+ 			var ingredients = [];
+
  			for(var i = 0; i < length; i++) {
 
  				if(name == recipes[i].name) {
- 					defer.resolve(recipes[i].ingredients || []);
+ 					//console.log(recipes[i].ingredients);
+ 					ingredients.push(recipes[i].ingredients);
  				}
 
- 			} 			
+ 			}
 
- 			defer.resolve(name);
+ 			if(ingredients.length > 0) {
+ 				defer.resolve(ingredients);
+ 			} else {
+ 				defer.resolve(name);
+
+ 			}			
+
  		})
 
  		return defer.promise;
  	}
+
+ 	$scope.loFlatten = lodash.flattenDeep;
 
  	// select an object, prep for editing
  	$scope.select = function(recipe) {
@@ -143,6 +154,7 @@
 
  				recipeMap(new_recipe.ingredients).then(function(loaded){
  					$scope.message_recipes.$add({name: new_recipe.name}).then(function(ref) {
+ 						console.log(loaded);
  						ref.child('ingredients').set(loaded || {}, function() {
  							alert('Recipe added', 'success');
  						});
